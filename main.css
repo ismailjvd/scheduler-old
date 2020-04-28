@@ -843,6 +843,9 @@ ul a:hover {
 }
 
 @media (max-width: 568px) {
+	.class-lists {
+		height: auto;
+	}
 	#resource-header {
 		width: 75%;
 	}
@@ -853,6 +856,6 @@ ul a:hover {
 		height: 34px;
 	}
 	.class-lists:not(.minor-selected) .list {
-		height: 100px;
+		height: 132px;
 	}
 }
