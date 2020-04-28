@@ -146,7 +146,7 @@ $(document).ready(function() {
         if (!input) {
             input_box.focus()
         } else {
-            addClass(input, list_id)
+            addClass(input.trim(), list_id)
             input_box.val("")
         }
     })
@@ -761,7 +761,7 @@ function filterLists(courseType) {
 
 // Add a class if it does not already exist in the schedule
 function addClass(input, list_id) {
-    if (!(input)) {
+    if (!input || !input.replace(/\s/g, '').length) {
         displayError("Class cannot be empty")
         return
     }
