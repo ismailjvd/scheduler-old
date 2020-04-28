@@ -265,8 +265,8 @@ function makeListsDroppable() {
                     $(this).append(draggedItem)
                     saveLists()
                 }
-                $(this).removeAttr("drop-active")
             }
+            $(this).removeAttr("drop-active")
         });
 
         list.addEventListener('click', function(e) {
