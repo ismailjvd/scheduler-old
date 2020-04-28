@@ -412,6 +412,11 @@ function makeItemClickable(item) {
             }
         }
     })
+
+    // Prevent deletion on taphold, mobile
+    $(item).bind('taphold', function(e) {
+        e.stopPropagation()
+    })
 }
 
 // Returns cache key, a combination of all the dropdown values
