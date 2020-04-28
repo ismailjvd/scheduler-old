@@ -50,6 +50,14 @@ header h3 {
 	color:#005eff;
 }
 
+#logo {
+	margin-bottom: 20px;
+}
+
+#logo img {
+	width: 280px;
+}
+
 #degree-container {
 	display: flex;
 	flex-direction: column;
@@ -495,6 +503,7 @@ ul a:hover {
 	transition: 0.1s ease;
 	z-index: 1;
 	transition: background-color 0.2s ease;
+	word-wrap: break-word;
 }
 
 .list .list-item:hover {
@@ -658,9 +667,15 @@ ul a:hover {
 	.links-container {
 		width: 75vw;
 	}
+	#resource-header {
+		width: 40%;
+	}
 }
 
 @media (max-width: 820px) {
+	#logo img {
+		width: 230px;
+	}
 	#error-container {
 		width: 94vw;
 	}
@@ -675,7 +690,7 @@ ul a:hover {
 	}
 	.link-item {
 		padding: 4px 0px;
-		font-size: 14px;
+		font-size: 16px;
 	}
 	.list-container {
 		margin: 0 8px;
@@ -727,9 +742,12 @@ ul a:hover {
 	.list-searchbar {
 		font-size: 14px;
 	}
-	.list-item {
-		font-size: 14px;
-		overflow-wrap: anywhere;
+	.list .list-item {
+		font-size: 15px;
+	}
+	#resource-header {
+		width: 50%;
+		font-size: 18px;
 	}
 }
 
@@ -738,4 +756,10 @@ ul a:hover {
 		height: 160px;
 	}
 	
+}
+
+@media (max-width: 560px) {
+	#resource-header {
+		width: 75%;
+	}
 }
