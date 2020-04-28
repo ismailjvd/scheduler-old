@@ -415,6 +415,8 @@ function makeItemClickable(item) {
 
     // Prevent deletion on taphold, mobile
     $(item).bind('taphold', function(e) {
+        clickedItem = null;
+        draggedItem = null;
         e.preventDefault()
         e.stopPropagation()
     })
