@@ -120,6 +120,17 @@ $(document).ready(function() {
     $("#image").click(function() {
         saveImage()
     });
+   $("#resource-header").bind("click", function(e) {
+        linkContainer = $(this).parent()
+        if (linkContainer.hasClass("expanded")) {
+            linkContainer.removeClass("expanded")
+            $(this).html("Resource List <div class='expand-symbol'> &#xf078;</div>")
+        } else {
+            linkContainer.addClass("expanded")
+            $(this).html("Resource List <div class='expand-symbol'>&#xf077;</div>")
+        }
+        $("#link-wrapper").stop().slideToggle(400)
+    })
     $("#error-exit").bind("click", function(e) {
         $(this).parent().hide()
     })

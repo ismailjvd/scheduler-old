@@ -33,7 +33,7 @@ header {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	margin: 16px;
+	margin: 25px;
 }
 
 header h1 {
@@ -184,26 +184,60 @@ select:focus {
     flex-direction: column;
     justify-content: center;
 	align-items: center;
-	font-family: 'Montserrat', sans-serif;
+	font-family: 'Sen', sans-serif;
 	margin: 0px;
 	width: 100%;
-    background-color: rgb(77, 87, 97);
+    background-color: #858c99;
     color: white;
     padding: 6px 18px;
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
 }
 
+.main-title h2 {
+	font-weight: 600;
+}
+
 .links-container {
 	margin: 12px 0px;
-	padding: 0px 24px;
 	display: flex;
 	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+	width: 50vw;
+	border-top: 3px lightgray;
+	border-bottom: 3px lightgray;
+	
+}
+
+.links-title {
+	display: flex;
+	flex-direction: row;
 	justify-content: center;
 	align-items: center;
-	width: 60vw;
-	border-top: 3px double lightgray;
-	border-bottom: 3px double lightgray;
+	width: 100%;
+	font-size: 19px;
+	font-weight: 600;
+	text-align: center;
+	background-color: #eeeeee;
+	font-family: Sen, FontAwesome, sans-serif;
+	padding: 6px;
+	width: 20vw;
+	border-radius: 12px;
+}
+
+.expand-symbol {
+	padding: 0px 8px 1px 8px;
+	font-size: 12px;
+}
+
+.links-title:hover {
+	cursor: pointer;
+}
+
+#link-wrapper {
+	display: none;
+	padding: 0px 24px;
 }
 
 .links-list-container {
@@ -214,19 +248,18 @@ select:focus {
 	padding: 12px 0px;
 }
 
-#major1-links, #major2-links, #minor-links {
-	display: none;
-}
-
 .link-container-title {
-	font-size: 24px;
+	font-size: 20px;
 	padding: 2px 0;
+	font-family: Sen, sans-serif;
+	font-weight: 500;
 	text-decoration: underline;
 	text-align: center;
 }
 
 .link-item {
-	font-family: Montserrat, sans-serif;
+	font-family: Calibri, sans-serif;
+	font-size: 19px;
 	padding: 2px 0;
 	display: flex;
 	flex-direction: column;
@@ -241,7 +274,7 @@ select:focus {
 
 ul a {
 	text-decoration: none;
-	color: #0088e8;
+	color: #005eff;
 	font-weight: 560;
 }
 
@@ -450,11 +483,12 @@ ul a:hover {
 }
 
 .list .list-item {
-	font-family: 'Roboto', sans-serif;
+	font-family: Calibri, sans-serif;
+	font-size: 17.5px;
 	width: 100%;
 	background-color: rgba(0, 0, 0, 0.06);
 	border-radius: 10px;
-	border: 1px solid rgb(190, 190, 190);
+	border: 1px solid rgb(205, 205, 205);
 	padding: 4px 4px;
 	text-align: center;
 	margin: 1px 0px;
