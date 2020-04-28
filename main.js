@@ -337,14 +337,14 @@ function makeItemDraggable(item) {
         }
         draggedItem = item;
         setTimeout(function () {
-            item.style.display = 'none';
+            $(item).css("opacity", "0.6")
         }, 0)
     });
 
     $(item).on('dragend', function (e) {
         setTimeout(function () {
             if (draggedItem) {
-                draggedItem.style.display = 'block';
+                $(draggedItem).css("opacity", "1")
                 draggedItem = null;
             }
         }, 0);
@@ -411,14 +411,6 @@ function makeItemClickable(item) {
                 }
             }
         }
-    })
-
-    // Prevent deletion on taphold, mobile
-    $(item).bind('taphold', function(e) {
-        clickedItem = null;
-        draggedItem = null;
-        e.preventDefault()
-        e.stopPropagation()
     })
 }
 
