@@ -327,7 +327,7 @@ ul a:hover {
 .list-wrapper {
 	display: flex;
 	flex-direction: row;
-	justify-content: flex-start;
+	justify-content: center;
 	align-items: center;
 	width: 96%;
 	padding: 8px 4px;
