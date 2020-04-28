@@ -770,6 +770,7 @@ ul a:hover {
 	.schedule-lists {
 		flex-direction: row;
 		width: 100%;
+		height: 180px;
 	}
 	.schedule-lists .list {
 		height: 100px;

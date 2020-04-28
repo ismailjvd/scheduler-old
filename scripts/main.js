@@ -349,6 +349,21 @@ function makeItemDraggable(item) {
             }
         }, 0);
     })
+
+    $(item).bind('touchend', function (item) {
+        if (draggedItem != null) {
+            let allowDrop = false
+            $(".list").each(function() {
+                if ($(this).attr("drop-active") == "true") {
+                    allowDrop = true
+                }
+            })
+            if (!allowDrop) {
+                $(draggedItem).css("opacity", 1)
+                draggedItem = null
+            }
+        }
+    })
 }
 
 // Allows list-items to be clickable, for click and drop
