@@ -325,12 +325,17 @@ ul a:hover {
 	width: 50%;
 }
 
+.list-outer-wrapper {
+	width: 100%;
+	padding: 0 8px;
+}
+
 .list-wrapper {
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
 	align-items: flex-end;
-	width: 96%;
+	width: 100%;
 	padding: 8px 4px;
 }
 
@@ -740,19 +745,23 @@ ul a:hover {
 		padding: 4px 0px;
 		font-size: 16px;
 	}
+	#schedule-list-outer-wrapper {
+		overflow-y: scroll;
+		height: 380px;
+	}
 	#schedule-list-wrapper {
 		flex-direction: column;
 		justify-content: flex-start;
 		width: 100%;
-		height: 380px;
+	}
+	#class-list-outer-wrapper.minor-selected {
+		height: 200px;
 		overflow-y: scroll;
 	}
 	#class-list-wrapper.minor-selected {
 		flex-direction: column;
 		justify-content: flex-start;
 		width: 100%;
-		height: 200px;
-		overflow-y: scroll;
 	}
 	.class-lists.minor-selected {
 		width: 100%;
@@ -770,7 +779,6 @@ ul a:hover {
 	.schedule-lists {
 		flex-direction: row;
 		width: 100%;
-		height: 180px;
 	}
 	.schedule-lists .list {
 		height: 100px;
@@ -834,7 +842,7 @@ ul a:hover {
 	}
 }
 
-@media (max-height: 600px) {
+@media (max-height: 732px) {
 	.class-lists {
 		height: auto;
 	}
@@ -844,15 +852,15 @@ ul a:hover {
 }
 
 @media (max-width: 568px) {
-	.class-lists {
-		height: auto;
-	}
 	#resource-header {
 		width: 75%;
 	}
 }
 
 @media (max-width: 424px) {
+	.class-lists {
+		height: auto;
+	}
 	.class-lists:not(.minor-selected) #breadths-title {
 		height: 34px;
 	}

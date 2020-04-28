@@ -490,11 +490,13 @@ function loadLists(inputs) {
             $("#minorCoursesTitle").hide()
             $(".class-lists").removeClass("minor-selected")
             $("#class-list-wrapper").removeClass("minor-selected")
+            $("#class-list-outer-wrapper").removeClass("minor-selected")
         } else {
             $("#minorCourses-container").show()
             $("#minorCoursesTitle").show()
             $(".class-lists").addClass("minor-selected")
             $("#class-list-wrapper").addClass("minor-selected")
+            $("#class-list-outer-wrapper").addClass("minor-selected")
         }
     }
 }
@@ -589,11 +591,13 @@ function updateLists(firstMajor, secondMajor, minor) {
         $("#minorCoursesTitle").show()
         $(".class-lists").addClass("minor-selected")
         $("#class-list-wrapper").addClass("minor-selected")
+        $("#class-list-outer-wrapper").addClass("minor-selected")
     } else {
         $("#minorCourses-container").hide()
         $("#minorCoursesTitle").hide()
         $(".class-lists").removeClass("minor-selected")
         $("#class-list-wrapper").removeClass("minor-selected")
+        $("#class-list-outer-wrapper").removeClass("minor-selected")
     }
 
     for (const courseType in listData) {
