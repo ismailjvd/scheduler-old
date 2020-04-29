@@ -236,8 +236,8 @@ select:focus {
 }
 
 .expand-symbol {
-	padding: 0px 8px 1px 8px;
 	font-size: 12px;
+	padding: 0 0 0 8px;
 }
 
 .links-title:hover {
