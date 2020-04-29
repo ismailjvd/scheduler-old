@@ -120,6 +120,13 @@ $(document).ready(function() {
     $("#image").click(function() {
         saveImage()
     });
+    $("#schedule-open-menu").click(function() {
+        if ($("#schedule-menu-wrapper").css("display") === "none") {
+            $("#schedule-menu-wrapper").css("display", "block")
+        } else {
+            $("#schedule-menu-wrapper").css("display", "none")
+        }
+    })
    $("#resource-header").bind("click", function(e) {
         linkContainer = $(this).parent()
         if (linkContainer.hasClass("expanded")) {
@@ -175,6 +182,9 @@ $(document).ready(function() {
                 $(clickedItem).removeClass('clicked')
                 clickedItem = null
             }
+        }
+        if ( $(e.target).closest('#schedule-open-menu').length === 0 && $("#schedule-menu-wrapper").css("display") !== "none") {
+            $("#schedule-menu-wrapper").css("display", "none")
         }
     });
 });

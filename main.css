@@ -66,6 +66,7 @@ header h3 {
 	justify-content: center;
 	align-items: center;
 	font: bold 22px Sen, sans-serif;
+	margin-bottom: 12px;
 }
 
 .all-filters {
@@ -108,25 +109,27 @@ select:focus {
 .toolbar-element {
 	display: flex;
 	flex-direction: row;
-	justify-content: center;
+	justify-content: flex-start;
 	align-items: center;
 	height: 40px;
-	margin: 8px 2px;
+	padding: 8px;
 	opacity: 0.7;
 	transition: 0.1s ease;
+	font-family: 'Sen', sans-serif;
+	font-size: 16px;
+	color: black;
+	width: 100%;
+	border-bottom: 1px solid lightgray;
 }
 
 .toolbar-element:hover {
 	opacity: 0.9;
 	cursor: pointer;
-}
-
-.toolbar-element:active {
-	transform: scale(0.97)
+	background-color: rgba(0, 0, 0, 0.12)
 }
 
 .toolbar-text {
-	margin-right: 6px;
+	margin-left: 8px;
 }
 
 #refresh-symbol {
@@ -144,14 +147,13 @@ select:focus {
 #import-symbol {
 	height: 28px;
 	width: 28px;
-	margin: 6px 6px 4px 3px;
+	margin: 6px 5px 4px 3px;
 }
 
 #image-symbol {
 	height: 26px;
 	width: 23px;
-	margin: 6px;
-}
+	margin: 6px 6px 6px 7px}
 
 .error-container {
 	display: flex;
@@ -176,6 +178,7 @@ select:focus {
 }
 
 .main-container {
+	position: relative;
 	margin: 16px 0;
 	background-color: #eeeeee;
 	display: flex;
@@ -238,6 +241,41 @@ select:focus {
 .expand-symbol {
 	font-size: 12px;
 	padding: 0 0 0 8px;
+}
+
+.open-menu {
+	position: absolute;
+	z-index: 3;
+	font-size: 20px;
+	font-family: FontAwesome;
+	top: 8px;
+	right: 8px;
+	color: white;
+	padding: 4px 12px;
+}
+
+.open-menu:hover {
+	cursor: pointer;
+}
+
+.menu-wrapper {
+	display: none;
+	position: absolute;
+	top: 0px;
+	right: 2px;
+	width: auto;
+	z-index: 3;
+}
+
+.schedule-menu {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+	width: 240px;
+	height: auto;
+	background-color: white;
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
 
 .links-title:hover {
@@ -327,6 +365,7 @@ ul a:hover {
 }
 
 .list-outer-wrapper {
+	position: relative;
 	width: 100%;
 	padding: 0 8px;
 }
@@ -340,15 +379,15 @@ ul a:hover {
 	padding: 8px 4px;
 }
 
-.list-wrapper::-webkit-scrollbar {
+.list-outer-wrapper::-webkit-scrollbar {
 	width: 3px;
 }
 
-.list-wrapper::-webkit-scrollbar-track {
+.list-outer-wrapper::-webkit-scrollbar-track {
 	border-radius: 100px;
 }
 
-.list-wrapper::-webkit-scrollbar-thumb {
+.list-outer-wrapper::-webkit-scrollbar-thumb {
 	background: rgb(195, 195, 195);
 	border-radius: 20px;
 }
@@ -736,6 +775,12 @@ ul a:hover {
 	.main-container {
 		width: 94vw;
 	}
+	.open-menu {
+		top: 6px;
+	}
+	.schedule-menu {
+		width: 200px;
+	}
 	.links-container {
 		width: 90vw;
 	}
@@ -808,25 +853,26 @@ ul a:hover {
 	#refresh-symbol {
 		height: 18px;
 		width: 22px;
-		margin: 4px;
+		margin: 4px 6px 4px 4px;
 	}
 	#export-symbol {
 		height: 22px;
 		width: 22px;
-		margin: 4px;
+		margin: 4px 6px 4px 4px;
 	}
 	#import-symbol {
 		height: 26px;
 		width: 26px;
-		margin: 4px 4px 4px 3px;
+		margin: 4px 5px 4px 1px;
 	}
 	#image-symbol {
 		height: 24px;
 		width: 21px;
-		margin: 4px;
+		margin: 4px 6px 4px 5px;
 	}
 	.toolbar-text {
 		font-size: 14px;
+		margin-left: 4px;
 	}
 	.list-title {
 		font-size: 16px;
