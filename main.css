@@ -243,6 +243,20 @@ select:focus {
 	padding: 0 0 0 8px;
 }
 
+#refresh-title {
+	position: absolute;
+	top: 8px;
+	right: 48px;
+	filter: invert(1);
+	font-family: FontAwesome;
+	font-size: 19px;
+	padding: 4px 8px;
+}
+
+#refresh-title:hover {
+	cursor: pointer;
+}
+
 .open-menu {
 	position: absolute;
 	z-index: 3;
@@ -774,6 +788,11 @@ ul a:hover {
 	}
 	.main-container {
 		width: 94vw;
+	}
+	#refresh-title {
+		top: 6px;
+		right: 42px;
+		font-size: 18px;
 	}
 	.open-menu {
 		top: 6px;

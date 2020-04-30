@@ -113,7 +113,10 @@ $(document).ready(function() {
     // Toolbar functions
     $("#refresh").click(function() {
         refreshLists()
-    });
+    })
+    $("#refresh-title").click(function() {
+        refreshLists()
+    })
     $("#export").click(function() {
         downloadJSON()
     });
