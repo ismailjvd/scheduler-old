@@ -350,7 +350,7 @@ ul a:hover {
 	align-items: center;
 	width: 100%;
 	height: auto;
-	padding: 12px 0px 4px 0px;
+	padding: 12px 0px 12px 0px;
 }
 
 .list-title {
@@ -376,6 +376,7 @@ ul a:hover {
 
 #minorCourses-container {
 	width: 50%;
+	display: none;
 }
 
 .list-outer-wrapper {

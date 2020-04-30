@@ -505,7 +505,7 @@ function loadLists(inputs) {
             $("#class-list-wrapper").removeClass("minor-selected")
             $("#class-list-outer-wrapper").removeClass("minor-selected")
         } else {
-            $("#minorCourses-container").show()
+            $("#minorCourses-container").css("display", "flex")
             $("#minorCoursesTitle").show()
             $(".class-lists").addClass("minor-selected")
             $("#class-list-wrapper").addClass("minor-selected")
@@ -527,7 +527,7 @@ function loadListsFromJSON(jsonString) {
         courses.forEach( function(item, index) {
             var courseName = getCourseName(item)
             var courseType = getCourseType(item)
-            classData[courseName] = courseType
+            classData[courseName.replace(/\s+/g, '+')] = courseType
             str += '<div class="list-item '+courseType+'" draggable="true" id="'+item+'">'+courseName+'</div>'
         })
         div.html(str)
@@ -561,13 +561,13 @@ function updateLists(firstMajor, secondMajor, minor) {
         let courses = []
         majorObj[courseType].forEach( function(item, index) {
             courses.push(item)
-            classData[item] = courseType
+            classData[item.replace(/\s+/g, '+')] = courseType
         });
         if (secondMajor != "-") {
             majorObj2[courseType].forEach( function(item, index) {
-                if (!(item in classData)) {
+                if (!(item.replace(/\s+/g, '+') in classData)) {
                     courses.push(item)
-                    classData[item] = courseType
+                    classData[item.replace(/\s+/g, '+')] = courseType
                 }
             });
         }
@@ -580,9 +580,9 @@ function updateLists(firstMajor, secondMajor, minor) {
     let breadths = data["breadths"]["breadthCourses"]
     let courses = []
     breadths.forEach( function(item, index) {
-        if (!(item in classData)) {
+        if (!(item.replace(/\s+/g, '+') in classData)) {
             courses.push(item)
-            classData[item] = "breadths"
+            classData[item.replace(/\s+/g, '+')] = "breadths"
         }
     });
     courses.sort()
@@ -593,14 +593,14 @@ function updateLists(firstMajor, secondMajor, minor) {
         var minorObj = data["minors"][minor]
         let courses = []
         minorObj["minorCourses"].forEach( function(item, index) {
-            if (!(item in classData)) {
+            if (!(item.replace(/\s+/g, '+') in classData)) {
                 courses.push(item)
-                classData[item] = "minorCourses"
+                classData[item.replace(/\s+/g, '+')] = "minorCourses"
             }
         });
         courses.sort()
         listData["minorCourses"] = courses
-        $("#minorCourses-container").show()
+        $("#minorCourses-container").css("display", "flex")
         $("#minorCoursesTitle").show()
         $(".class-lists").addClass("minor-selected")
         $("#class-list-wrapper").addClass("minor-selected")
@@ -784,8 +784,8 @@ function addClass(input, list_id) {
             Math.min(input.length, MAX_CLASS_LENGTH)) + "'")
         return
     }
-    if (input in classData) {
-        displayError(input + " already exists in " + LIST_ID_TO_NAME[classData[input]])
+    if (input.replace(/\s+/g, '+') in classData) {
+        displayError(input + " already exists in " + LIST_ID_TO_NAME[classData[input.replace(/\s+/g, '+')]])
         return
     }
     let courses = []
@@ -797,7 +797,7 @@ function addClass(input, list_id) {
     let item = courseType+"_"+courseName.replace(/\s+/g, '+')
     courses.push(item)
     listData[list_id] = courses
-    classData[courseName] = courseType
+    classData[courseName.replace(/\s+/g, '+')] = courseType
     let div = $("#"+list_id)
     let str = '<div class="list-item '+courseType+'" draggable="true" id="'+item+'">'+courseName+'</div>'
     div.append(str)
@@ -819,8 +819,8 @@ function removeCourse() {
         }
     }
     if (courseType === "addedClass") {
-        if (courseName in classData) {
-            delete classData[courseName]
+        if (courseName.replace(/\s+/g, '+') in classData) {
+            delete classData[courseName.replace(/\s+/g, '+')]
         }
         $("#"+$.escapeSelector(courseId)).remove()
     } else {
