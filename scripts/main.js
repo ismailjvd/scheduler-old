@@ -331,6 +331,9 @@ function removeClickFromLists() {
         "border": "0",
         "visibility": "hidden"
     })
+    MobileDragDrop.polyfill({
+		holdToDrag: 300
+    });
 }
 
 // Allows list-items to be draggable
@@ -344,12 +347,18 @@ function makeItemsDraggable() {
 function makeItemDraggable(item) {
     $(item).on('dragstart', function (e) {
         if (clickedItem != null) {
-            removeClickFromLists()
+            if ($(clickedItem).attr('id') != $(this).attr('id')) {
+                $(clickedItem).removeClass('clicked')
+                removeClickFromLists()
+                clickedItem = null
+                return
+            }
             $(clickedItem).removeClass('clicked')
             clickedItem = null
         }
         draggedItem = item;
         setTimeout(function () {
+            removeClickFromLists()
             $(item).css("opacity", "0.6")
         }, 0)
     });
@@ -426,6 +435,10 @@ function makeItemClickable(item) {
             "border": "1px solid rgb(190, 190, 190)",
             "visibility": "visible"
         })
+
+        MobileDragDrop.polyfill({
+            holdToDrag: 50
+        });
 
         var lists = $('.list');
         let courseType = getCourseType($(clickedItem).attr("id"))
