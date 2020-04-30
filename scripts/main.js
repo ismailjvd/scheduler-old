@@ -688,7 +688,7 @@ function refreshLists() {
     let firstMajor = $("#major-dropdown option:selected").text()
     let secondMajor = $("#major2-dropdown option:selected").text()
     let minor = $("#minor-dropdown option:selected").text()
-    localStorage.clear()
+    localStorage.removeItem(getCacheKey())
     updateLists(firstMajor, secondMajor, minor)
     saveLists()
 }
