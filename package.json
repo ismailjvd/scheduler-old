@@ -1,0 +1,37 @@
+{
+  "name": "scheduler",
+  "version": "1.0.0",
+  "description": "scheduler for uc berkeley students, drag and drop",
+  "main": "scripts/app.js",
+  "scripts": {
+    "start": "parcel index.html --open",
+    "build": "parcel build index.html -d docs",
+    "clean": "rm -rf dist/*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ismailjvd/ismailjvd.github.io.git"
+  },
+  "keywords": [
+    "scheduler",
+    "drag",
+    "drop",
+    "uc",
+    "berkeley",
+    "courses"
+  ],
+  "author": "ismail.javed",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ismailjvd/ismailjvd.github.io/issues"
+  },
+  "homepage": "https://github.com/ismailjvd/ismailjvd.github.io#readme",
+  "dependencies": {
+    "jquery": "^3.5.0",
+    "jsurl": "^0.1.5",
+    "mobile-drag-drop": "^2.3.0-rc.2"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4"
+  }
+}

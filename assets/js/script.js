@@ -1,4 +1,7 @@
-var data = {}
+import {polyfill} from 'mobile-drag-drop'
+import $ from 'jquery'
+import * as data from '../data/degrees.json'
+
 var listData = {}
 var classData = {}
 var draggedItem = null
@@ -13,60 +16,50 @@ var LIST_ID_TO_NAME = {
 const MAX_CLASS_LENGTH = 20
 
 $(document).ready(function() {
-    // Read the degrees.json file and store the object in data
-    $.ajax({
-        type: "GET",  
-        url: "./degrees.json",
-        dataType: "json",       
-        success: function(response)  {
-            data = response
+      // Sort the majors
+      let sortedMajors = {}
+      Object.keys(data["majors"]).sort().forEach(function(key) {
+          sortedMajors[key] = data["majors"][key];
+      });
+      data["majors"] = sortedMajors
 
-            // Sort the majors
-            let sortedMajors = {}
-            Object.keys(data["majors"]).sort().forEach(function(key) {
-                sortedMajors[key] = data["majors"][key];
-            });
-            data["majors"] = sortedMajors
+      // Sort the minors
+      let sortedMinors = {}
+      Object.keys(data["minors"]).sort().forEach(function(key) {
+          sortedMinors[key] = data["minors"][key];
+      });
+      data["minors"] = sortedMinors
 
-            // Sort the minors
-            let sortedMinors = {}
-            Object.keys(data["minors"]).sort().forEach(function(key) {
-                sortedMinors[key] = data["minors"][key];
-            });
-            data["minors"] = sortedMinors
+      // Populate the first major list dropdown
+      var defaultMajor = ""
+      for (const major in data["majors"]) {
+          if (defaultMajor === "") {
+              defaultMajor = major
+          }
+          $("#major-dropdown").append("<option value='" + major + "'>" + major + "</option>")
+      }
 
-            // Populate the first major list dropdown
-            var defaultMajor = ""
-            for (const major in data["majors"]) {
-                if (defaultMajor === "") {
-                    defaultMajor = major
-                }
-                $("#major-dropdown").append("<option value='" + major + "'>" + major + "</option>")
-            }
+      let firstMajor = defaultMajor
+      let secondMajor = "-"
+      let minor = "-"
 
-            let firstMajor = defaultMajor
-            let secondMajor = "-"
-            let minor = "-"
+      // Retrieve last dropdown values from cache
+      if (localStorage["previousInputs"]) {
+          let inputs = localStorage["previousInputs"].split(";")
+          firstMajor = inputs[0]
+          secondMajor = inputs[1]
+          minor = inputs[2]
+      }
 
-            // Retrieve last dropdown values from cache
-            if (localStorage["previousInputs"]) {
-                let inputs = localStorage["previousInputs"].split(";")
-                firstMajor = inputs[0]
-                secondMajor = inputs[1]
-                minor = inputs[2]
-            }
-
-            // Populate other dropdown lists, set dropdown values, and update lists accordingly
-            $("#major-dropdown").val(firstMajor)
-            populateSecondMajorList(firstMajor)
-            populateMinorList(firstMajor)
-            $("#major2-dropdown").val(secondMajor)
-            $("#minor-dropdown").val(minor)
-            updateLists(firstMajor, secondMajor, minor)
-            updateResources()
-            saveLists()
-        }
-    });
+      // Populate other dropdown lists, set dropdown values, and update lists accordingly
+      $("#major-dropdown").val(firstMajor)
+      populateSecondMajorList(firstMajor)
+      populateMinorList(firstMajor)
+      $("#major2-dropdown").val(secondMajor)
+      $("#minor-dropdown").val(minor)
+      updateLists(firstMajor, secondMajor, minor)
+      updateResources()
+      saveLists()
 
     // On selecting a first major, update the dropdown lists, set the second major and minor to "-", and populate/cache the lists
     $("#major-dropdown").change(function() {
@@ -134,7 +127,7 @@ $(document).ready(function() {
 
     // Resource list header expand/collapse
    $("#resource-header").bind("click", function(e) {
-        linkContainer = $(this).parent()
+        let linkContainer = $(this).parent()
         if (linkContainer.hasClass("expanded")) {
             linkContainer.removeClass("expanded")
             $(this).html('Resource List <span id="expand-symbol" class="expand-symbol"> &#xf078;</span>')
@@ -154,7 +147,7 @@ $(document).ready(function() {
     $(".list-searchbar").bind("input", function(e) {
         let courseType = $(this).next().attr('id')
         let inputText = $("#"+courseType+"Search").val()
-        filterLists(courseType) 
+        filterLists(courseType)
     })
 
     // add/remove class click and input functions
@@ -199,9 +192,11 @@ $(document).ready(function() {
         }
     })
 
-    MobileDragDrop.polyfill({
-		holdToDrag: 300
+    // Drag and drop mobile functionality
+    polyfill({
+		    holdToDrag: 300
     });
+    window.addEventListener( 'touchmove', function() {});
 
 });
 
@@ -271,7 +266,7 @@ function makeListsDroppable() {
         list.addEventListener('drop', function (e) {
             if (draggedItem != null) {
                 var courseType = getCourseType($(draggedItem).attr("id"))
-                if ($(this).hasClass("schedule-list") || $(this).attr("id") == courseType && 
+                if ($(this).hasClass("schedule-list") || $(this).attr("id") == courseType &&
                     $(draggedItem).parent().attr('id') != $(this).attr('id')) {
                     let courseId = $(draggedItem).attr("id")
                     let list_id = $(draggedItem).parent().attr("id")
@@ -344,8 +339,8 @@ function removeClickFromLists() {
         "border": "0",
         "visibility": "hidden"
     })
-    MobileDragDrop.polyfill({
-		holdToDrag: 300
+    polyfill({
+		    holdToDrag: 300
     });
 }
 
@@ -404,7 +399,7 @@ function makeItemDraggable(item) {
 // Allows list-items to be clickable, for click and drop
 function makeItemsClickable() {
     var list_items = $('.list-item');
-    
+
     for (let i = 0; i < list_items.length; i++) {
         const item = list_items[i];
 
@@ -449,7 +444,7 @@ function makeItemClickable(item) {
             "visibility": "visible"
         })
 
-        MobileDragDrop.polyfill({
+        polyfill({
             holdToDrag: 50
         });
 
@@ -568,7 +563,7 @@ function updateLists(firstMajor, secondMajor, minor) {
     clearLists()
 
     // Check for cached lists
-    inputs = getCacheKey()
+    let inputs = getCacheKey()
     if (localStorage[inputs]) {
         loadLists(inputs)
         return
@@ -674,9 +669,9 @@ function updateResources() {
     let titleDiv = $("#major1-links").children(".link-container-title")
     let listDiv = $("#major1-links").children(".links-list")
     if ("resources" in data["majors"][firstMajor]) {
-        resources = data["majors"][firstMajor]["resources"]
+        let resources = data["majors"][firstMajor]["resources"]
         titleDiv.html(firstMajor + " Resources")
-        s = ""
+        let s = ""
         for (const linkTitle in resources) {
             s += "<li class='link-item'><a href='"+resources[linkTitle]["link"]+"' target='blank'>"+linkTitle+"</a>"+
                 "<div class='link-description'>"+resources[linkTitle]["description"]+"</div></li>"
@@ -736,7 +731,7 @@ function refreshLists() {
 function downloadJSON() {
     var inputs = getCacheKey()
     if (localStorage[inputs]) {
-        jsonData = localStorage[inputs]
+        const jsonData = localStorage[inputs]
         var data = "text/json;charset=utf-8," + encodeURIComponent(jsonData);
         var a = document.createElement('a')
         a.href = "data:" + data;
@@ -752,7 +747,7 @@ function downloadJSON() {
 // Reads file on import and selects appropriate dropdown values, populates the list accordingly
 function readFile (evt) {
     var files = evt.target.files;
-    var file = files[0];           
+    var file = files[0];
     var reader = new FileReader();
     reader.onload = function(event) {
         clearLists()
@@ -760,9 +755,9 @@ function readFile (evt) {
         var inputs = listObj["inputs"]
         localStorage[inputs] = event.target.result
         let inputsArray = inputs.split(";")
-        firstMajor = inputsArray[0]
-        secondMajor = inputsArray[1]
-        minor = inputsArray[2]
+        const firstMajor = inputsArray[0]
+        const secondMajor = inputsArray[1]
+        const minor = inputsArray[2]
         $("#major-dropdown").val(firstMajor)
         populateSecondMajorList(firstMajor)
         populateMinorList(firstMajor)
@@ -795,8 +790,8 @@ function readFile (evt) {
 }
 
 function filterLists(courseType) {
-    s = $("#"+courseType+"Search").val().toUpperCase()
-    
+    let s = $("#"+courseType+"Search").val().toUpperCase()
+
     listData[courseType].forEach( function(courseID, index) {
         let courseName = getCourseName(courseID)
         let courseDiv = $("#" + $.escapeSelector(courseID))
@@ -817,7 +812,7 @@ function addClass(input, list_id) {
     }
     input = input.toUpperCase()
     if (!(isValidInput(input))) {
-        displayError("Class contains invalid characters, or exceeds limit: '" + input.substring(0, 
+        displayError("Class contains invalid characters, or exceeds limit: '" + input.substring(0,
             Math.min(input.length, MAX_CLASS_LENGTH)) + "'")
         return
     }
@@ -881,7 +876,7 @@ function isValidInput(input) {
 function displayError(msg) {
     const errDiv = $("#error-container")
     const errMsgDiv = $("#error-msg")
-    s = "Error: " + msg
+    let s = "Error: " + msg
     errMsgDiv.html(s)
     errDiv.css("display", "flex")
 }
