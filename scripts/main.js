@@ -119,10 +119,11 @@ $(document).ready(function() {
     })
     $("#export").click(function() {
         downloadJSON()
-    });
+    })
     $("#image").click(function() {
         saveImage()
-    });
+    })
+    document.getElementById('file').addEventListener('change', readFile, false);
     $("#schedule-open-menu").click(function() {
         if ($("#schedule-menu-wrapper").css("display") === "none") {
             $("#schedule-menu-wrapper").css("display", "block")
@@ -130,6 +131,8 @@ $(document).ready(function() {
             $("#schedule-menu-wrapper").css("display", "none")
         }
     })
+
+    // Resource list header expand/collapse
    $("#resource-header").bind("click", function(e) {
         linkContainer = $(this).parent()
         if (linkContainer.hasClass("expanded")) {
@@ -141,14 +144,20 @@ $(document).ready(function() {
         }
         $("#link-wrapper").stop().slideToggle(400)
     })
+
+    // exit error message
     $("#error-exit").bind("click", function(e) {
         $(this).parent().hide()
     })
+
+    // search bar input for filtering
     $(".list-searchbar").bind("input", function(e) {
         let courseType = $(this).next().attr('id')
         let inputText = $("#"+courseType+"Search").val()
         filterLists(courseType) 
-    }) 
+    })
+
+    // add/remove class click and input functions
     $(".plus-icon").click( function() {
         let list_id = $(this).parent().next().attr('id')
         let input_box = $(this).prev()
@@ -173,7 +182,6 @@ $(document).ready(function() {
             removeClickFromLists()
         }
     })
-    document.getElementById('file').addEventListener('change', readFile, false);
 
     makeListsDroppable();
 
@@ -189,7 +197,12 @@ $(document).ready(function() {
         if ( $(e.target).closest('#schedule-open-menu').length === 0 && $("#schedule-menu-wrapper").css("display") !== "none") {
             $("#schedule-menu-wrapper").css("display", "none")
         }
+    })
+
+    MobileDragDrop.polyfill({
+		holdToDrag: 300
     });
+
 });
 
 // Populates the second major list with majors != first major
@@ -490,7 +503,7 @@ function clearLists() {
 function saveLists() {
     var listObj = {}
     listObj["lists"] = {}
-    $('.list').each(function() {
+    $('.schedule-list').each(function() {
         var key = $(this).attr('id')
         var courses = []
         $(this).children().each(function () {
@@ -510,6 +523,8 @@ function loadLists(inputs) {
         var listJSON = localStorage[inputs]
         loadListsFromJSON(listJSON)
         let inputsArray = inputs.split(";")
+        let firstMajor = inputsArray[0]
+        let secondMajor = inputsArray[1]
         let minor = inputsArray[2]
         if (minor == "-") {
             $("#minorCourses-container").hide()
@@ -524,6 +539,7 @@ function loadLists(inputs) {
             $("#class-list-wrapper").addClass("minor-selected")
             $("#class-list-outer-wrapper").addClass("minor-selected")
         }
+        populateLists(firstMajor, secondMajor, minor)
     }
 }
 
@@ -545,8 +561,6 @@ function loadListsFromJSON(jsonString) {
         })
         div.html(str)
     }
-    makeItemsDraggable()
-    makeItemsClickable()
 }
 
 // Populates the lists, given the majors from the dropdown values
@@ -560,6 +574,11 @@ function updateLists(firstMajor, secondMajor, minor) {
         return
     }
 
+    populateLists(firstMajor, secondMajor, minor)
+}
+
+
+function populateLists(firstMajor, secondMajor, minor) {
     // Populate the lists using the data Object created from the json file
     // Each currDiv corresponds to a list_id (#lowerDivs, #upperDivs, etc)
     var majorObj = data["majors"][firstMajor]["classes"]
@@ -573,8 +592,10 @@ function updateLists(firstMajor, secondMajor, minor) {
         }
         let courses = []
         majorObj[courseType].forEach( function(item, index) {
-            courses.push(item)
-            classData[item.replace(/\s+/g, '+')] = courseType
+            if (!(item.replace(/\s+/g, '+') in classData)) {
+                courses.push(item)
+                classData[item.replace(/\s+/g, '+')] = courseType
+            }
         });
         if (secondMajor != "-") {
             majorObj2[courseType].forEach( function(item, index) {
@@ -628,15 +649,17 @@ function updateLists(firstMajor, secondMajor, minor) {
 
     for (const courseType in listData) {
         let currDiv = $("#" + courseType)
-        var str = ""
-        var newCourses = []
-        listData[courseType].forEach( function(item, index) {
-            let item_id = courseType+"_"+item.replace(/\s+/g, '+');
-            newCourses.push(item_id)
-            str += '<div class="list-item '+courseType+'" draggable="true" id="'+item_id+'">'+item+'</div>'
-        });
-        listData[courseType] = newCourses
-        currDiv.html(str)
+        if (!($(currDiv).hasClass("schedule-list"))) {
+            var str = ""
+            var newCourses = []
+            listData[courseType].forEach( function(item, index) {
+                let item_id = courseType+"_"+item.replace(/\s+/g, '+');
+                newCourses.push(item_id)
+                str += '<div class="list-item '+courseType+'" draggable="true" id="'+item_id+'">'+item+'</div>'
+            });
+            listData[courseType] = newCourses
+            currDiv.html(str)
+        }
     }
 
     makeItemsDraggable();
@@ -724,6 +747,7 @@ function downloadJSON() {
         container.removeChild(a)
     }
 }
+
 
 // Reads file on import and selects appropriate dropdown values, populates the list accordingly
 function readFile (evt) {
