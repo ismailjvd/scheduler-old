@@ -18,8 +18,7 @@ const LIST_ID_TO_NAME = {
     "addedClass": "Schedule"
 }
 const MAX_CLASS_LENGTH = 20
-const DOMAIN_NAME = "localhost:1234/"
-// const DOMAIN_NAME = "https://ismailjvd.github.io/"
+const DOMAIN_NAME = "https://ismailjvd.github.io/"
 
 $(document).ready(function() {
       // Sort the majors
