@@ -5,9 +5,9 @@
   "main": "scripts/app.js",
   "scripts": {
     "start": "parcel index.html --open",
-    "build": "parcel build index.html -d public --public-url https://ismailjvd.github.io/public/",
+    "build": "parcel build index.html -d scheduler --public-url https://ismailjvd.github.io/scheduler/",
     "clean": "rm -rf dist/*",
-    "push": "git subtree push --prefix public/ origin dev-build"
+    "push": "git subtree push --prefix scheduler/ origin dev-build"
   },
   "repository": {
     "type": "git",
