@@ -938,15 +938,23 @@ function addClass(input, list_id) {
             Math.min(input.length, MAX_CLASS_LENGTH)) + "'")
         return
     }
+    let courseType = "addedClass"
     if (input.replace(/\s+/g, '+') in classData) {
-        displayError(input + " already exists in " + LIST_ID_TO_NAME[classData[input.replace(/\s+/g, '+')]])
-        return
+        let courseId = input.replace(/\s+/g, '+')
+        courseType = classData[courseId]
+        if ($("#" + $.escapeSelector(courseType+"_"+courseId)).closest(".schedule-list").length !== 0) {
+            displayError(input + " already exists in Schedule")
+            return
+        } else {
+            let index = listData[courseType].indexOf(courseId)
+            listData[courseType].splice(index, 1)
+            $("#"+$.escapeSelector(courseType+"_"+courseId)).remove()
+        }
     }
     let courses = []
     if (list_id in listData && listData[list_id] != undefined) {
         courses = listData[list_id]
     }
-    let courseType = "addedClass"
     let courseName = input
     let item = courseType+"_"+courseName.replace(/\s+/g, '+')
     courses.push(item)
