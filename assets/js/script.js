@@ -2,11 +2,15 @@ import {polyfill} from 'mobile-drag-drop'
 import $ from 'jquery'
 import * as data from '../data/degrees.json'
 
+const queryString = require('query-string')
+const copy = require('clipboard-copy')
+
 var listData = {}
 var classData = {}
 var draggedItem = null
 var clickedItem = null
-var LIST_ID_TO_NAME = {
+var classSets = {}
+const LIST_ID_TO_NAME = {
     "lowerDivs": "Lower Division",
     "upperDivs": "Upper Division",
     "breadths": "Breadths",
@@ -14,6 +18,8 @@ var LIST_ID_TO_NAME = {
     "addedClass": "Schedule"
 }
 const MAX_CLASS_LENGTH = 20
+const DOMAIN_NAME = "localhost:1234/"
+// const DOMAIN_NAME = "https://ismailjvd.github.io/"
 
 $(document).ready(function() {
       // Sort the majors
@@ -43,12 +49,60 @@ $(document).ready(function() {
       let secondMajor = "-"
       let minor = "-"
 
+
+      // Retrieve url data if present, overwrite cache with new inputs
+      if (location.search) {
+        try {
+            let urlData = queryString.parse(location.search, {arrayFormat: "comma"})
+            if (!("inputs" in urlData) || !(Array.isArray(urlData["inputs"])) || !(urlData["inputs"].length === 3)) {
+                throw {"message": "Could not parse URL string: invalid major/minor values"}
+            }
+            const inputsArray = urlData["inputs"]
+            if (!(inputsArray[0] in data["majors"] && (inputsArray[1] in data["majors"] || inputsArray[1] === "-") && 
+                (inputsArray[2] in data["minors"] || inputsArray[2] === "-"))) {
+                throw {"message": "Could not parse URL string: invalid major/minor values"}
+            } 
+            const inputs = inputsArray.join(";")
+            delete urlData["inputs"]
+            let listObj = {"inputs": inputs, "lists": {}}
+            $(".schedule-list").each(function() {
+                const listId = $(this).attr("id")
+                if (listId in urlData) {
+                    if (typeof urlData[listId] === "string") {
+                        urlData[listId] = [urlData[listId]]
+                    }
+                    listObj["lists"][listId] = urlData[listId]
+                } else {
+                    listObj["lists"][listId] = []
+                }
+            })
+
+            localStorage[inputs] = JSON.stringify(listObj)
+            localStorage["previousInputs"] = inputs
+
+        } catch(err) {
+            displayError(err.message)
+        }
+        history.pushState('', 'Scheduler', '/');
+      } 
+
       // Retrieve last dropdown values from cache
       if (localStorage["previousInputs"]) {
-          let inputs = localStorage["previousInputs"].split(";")
-          firstMajor = inputs[0]
-          secondMajor = inputs[1]
-          minor = inputs[2]
+        try {
+            let inputsArray = localStorage["previousInputs"].split(";")
+            if (inputsArray.length !== 3) {
+                throw {"message": "Could not retrieve previous input values"}
+            }
+            if (!(inputsArray[0] in data["majors"] && (inputsArray[1] in data["majors"] || inputsArray[1] === "-") && 
+                (inputsArray[2] in data["minors"] || inputsArray[2] === "-"))) {
+                throw {"message": "Could not retrieve cached values: invalid values for major/minor"}
+            } 
+            firstMajor = inputsArray[0]
+            secondMajor = inputsArray[1]
+            minor = inputsArray[2]
+        } catch(err) {
+            console.log("unable to retrieve major values from cache") 
+        }
       }
 
       // Populate other dropdown lists, set dropdown values, and update lists accordingly
@@ -115,6 +169,28 @@ $(document).ready(function() {
     })
     $("#image").click(function() {
         saveImage()
+    })
+    $("#copy-url").click(function() {
+        let scheduleObj = {}
+        $(".schedule-list").each(function() {
+            let listId = $(this).attr("id")
+            if (listId in listData && listData[listId].length !== 0) {
+                scheduleObj[listId] = listData[listId]
+            }
+        })
+        let str = DOMAIN_NAME + "?"
+        if (Object.keys(scheduleObj).length !== 0) {
+            scheduleObj["inputs"] = getCacheKey().split(";")
+            str += queryString.stringify(scheduleObj, {arrayFormat: "comma"})
+        } else {
+            displayError("Could not create encoded URL for empty schedule")
+            return
+        }
+        if (str.length >= 2047) {
+            displayError("Could not create encoded URL (too long due to too many classes in schedule)")
+            return
+        }
+        copy(str)
     })
     document.getElementById('file').addEventListener('change', readFile, false);
     $("#schedule-open-menu").click(function() {
@@ -194,6 +270,7 @@ $(document).ready(function() {
 
     // Drag and drop mobile functionality
     polyfill({
+            forceApply: true,
 		    holdToDrag: 300
     });
     window.addEventListener( 'touchmove', function() {});
@@ -233,6 +310,29 @@ function getCourseName(courseId) {
 
 function getCourseType(courseId) {
     return courseId.split("_")[0]
+}
+
+// Changes course type if class already exists for major/minor, else makes it an addedClass
+function resolveCourseId(courseId) {
+    let arr = courseId.split("_")
+    if (arr.length !== 2) {
+        return null
+    }
+    let courseName = arr[1]
+    courseName = courseName.replace(/\++/g, ' ');
+    let courseType = arr[0]
+    if (!(courseType in LIST_ID_TO_NAME)) {
+        courseType = "addedClass"
+    }
+    if (courseType === "addedClass") {
+        for (const existingType in classSets) {
+            if (classSets[existingType].has(courseName)) {
+                courseType = existingType
+                break
+            }
+        }
+    }
+    return courseType + "_" + courseName.replace(/\s+/g, '+').substring(0, Math.min(courseName.length, MAX_CLASS_LENGTH));
 }
 
 // Makes class and schedule lists droppable
@@ -543,24 +643,48 @@ function loadListsFromJSON(jsonString) {
     var listObj = JSON.parse(jsonString)
     listData = {}
     classData = {}
-    for (const listID in listObj["lists"]) {
-        var div = $("#" + listID)
-        var courses = listObj["lists"][listID]
-        listData[listID] = courses
-        var str = ""
-        courses.forEach( function(item, index) {
-            var courseName = getCourseName(item)
-            var courseType = getCourseType(item)
-            classData[courseName.replace(/\s+/g, '+')] = courseType
-            str += '<div class="list-item '+courseType+'" draggable="true" id="'+item+'">'+courseName+'</div>'
-        })
-        div.html(str)
-    }
+    $(".schedule-list").each(function() {
+        const listID = $(this).attr("id")
+        if (listID in listObj["lists"]) {
+            var div = $("#" + listID)
+            var courses = listObj["lists"][listID]
+            listData[listID] = courses
+            var str = ""
+            var newCourses = []
+            courses.forEach( function(item, index) {
+                let courseId = resolveCourseId(item)
+                if (courseId != null) {
+                    var courseName = getCourseName(courseId)
+                    var courseType = getCourseType(courseId)
+                    classData[courseName.replace(/\s+/g, '+')] = courseType
+                    str += '<div class="list-item '+courseType+'" draggable="true" id="'+courseId+'">'+courseName+'</div>'
+                    newCourses.push(courseId)
+                }
+            })
+            listData[listID] = newCourses
+            div.html(str)
+        }
+    })
 }
 
 // Populates the lists, given the majors from the dropdown values
 function updateLists(firstMajor, secondMajor, minor) {
     clearLists()
+
+    // Create sets for the selected majors and minor. Needed to resolve course ids in loadLists
+    for (const courseType in data["majors"][firstMajor]["classes"]) {
+        classSets[courseType] = new Set(data["majors"][firstMajor]["classes"][courseType])
+    }
+    classSets["breadths"] = new Set(data["breadths"]["breadthCourses"])
+    if (secondMajor !== "-") {
+        for (const courseType in data["majors"][secondMajor]["classes"]) {
+            classSets[courseType] = new Set([...classSets[courseType], ...data["majors"][secondMajor]["classes"][courseType]])
+        }
+    }  
+    if (minor !== "-") {
+        let courseType = "minorCourses"
+        classSets[courseType] = new Set(data["minors"][minor][courseType])
+    }
 
     // Check for cached lists
     let inputs = getCacheKey()
@@ -572,10 +696,9 @@ function updateLists(firstMajor, secondMajor, minor) {
     populateLists(firstMajor, secondMajor, minor)
 }
 
-
+// Populate the lists using the data Object created from the json file
+// Each currDiv corresponds to a list_id (#lowerDivs, #upperDivs, etc)
 function populateLists(firstMajor, secondMajor, minor) {
-    // Populate the lists using the data Object created from the json file
-    // Each currDiv corresponds to a list_id (#lowerDivs, #upperDivs, etc)
     var majorObj = data["majors"][firstMajor]["classes"]
     if (isSecondMajor()) {
         var majorObj2 = data["majors"][secondMajor]["classes"]

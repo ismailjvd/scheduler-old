@@ -153,7 +153,14 @@ select:focus {
 #image-symbol {
 	height: 26px;
 	width: 23px;
-	margin: 6px 6px 6px 7px}
+	margin: 6px 6px 6px 7px
+}
+
+#copy-symbol {
+	height: 21px;
+	width: 21px;
+	margin: 8px;
+}
 
 .error-container {
 	display: flex;
@@ -889,6 +896,11 @@ ul a:hover {
 		height: 24px;
 		width: 21px;
 		margin: 4px 6px 4px 5px;
+	}
+	#copy-symbol {
+		height: 19px;
+		width: 19px;
+		margin: 4px 6px 4px 7px;
 	}
 	.toolbar-text {
 		font-size: 14px;

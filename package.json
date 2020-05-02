@@ -28,9 +28,11 @@
   },
   "homepage": "https://github.com/ismailjvd/ismailjvd.github.io#readme",
   "dependencies": {
+    "clipboard-copy": "^3.1.0",
     "jquery": "^3.5.0",
     "jsurl": "^0.1.5",
-    "mobile-drag-drop": "^2.3.0-rc.2"
+    "mobile-drag-drop": "^2.3.0-rc.2",
+    "query-string": "^6.12.1"
   },
   "devDependencies": {
     "parcel-bundler": "^1.12.4"
