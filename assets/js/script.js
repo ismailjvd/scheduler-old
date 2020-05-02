@@ -82,7 +82,7 @@ $(document).ready(function() {
         } catch(err) {
             displayError(err.message)
         }
-        history.pushState('', 'Scheduler', '/');
+        history.pushState('', 'Scheduler', '/scheduler/');
       } 
 
       // Retrieve last dropdown values from cache
