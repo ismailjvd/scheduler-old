@@ -22,6 +22,7 @@ const DOMAIN_NAME = "https://ismailjvd.github.io/scheduler/"
 
 $(document).ready(function() {
       // Sort the majors
+      console.log("Hi there")
       let sortedMajors = {}
       Object.keys(data["majors"]).sort().forEach(function(key) {
           sortedMajors[key] = data["majors"][key];
