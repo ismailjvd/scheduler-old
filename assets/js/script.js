@@ -48,11 +48,11 @@ $(document).ready(function() {
       let secondMajor = "-"
       let minor = "-"
 
-
       // Retrieve url data if present, overwrite cache with new inputs
       if (location.search) {
         try {
-            let urlData = queryString.parse(location.search, {arrayFormat: "comma"})
+            let s = decodeURIComponent(location.search).replace(/\s+/g, '+')
+            let urlData = queryString.parse(s, {arrayFormat: "comma"})
             if (!("inputs" in urlData) || !(Array.isArray(urlData["inputs"])) || !(urlData["inputs"].length === 3)) {
                 throw {"message": "Could not parse URL string: invalid major/minor values"}
             }
