@@ -135,7 +135,7 @@
 			<header class="main-title">
 				<h2>Your Schedule</h2>
 			</header>
-			<div id="refresh-title">
+			<div id="refresh-title" class="noselect">
 				&#xf021;
 			</div>
 			<div class="open-menu" id="schedule-open-menu">&#xf142;</div>
@@ -159,9 +159,18 @@
 							<div class="toolbar-text">Import Schedule</div>
 						</label>
 
-						<div class="toolbar-element" id="refresh">
+						<div class="toolbar-element noselect" id="refresh">
 							<img src="assets/img/refresh-symbol.png" id="refresh-symbol"></img>
 							<div class="toolbar-text">Clear Schedule</div>
+						</div>
+					</div>
+				</div>
+				<div class="confirm-overlay hidden" id="confirm-overlay">
+					<div class="confirm-dialog" id="confirm-dialog">
+						<div class="confirm-message" id="confirm-message"></div>
+						<div class="btn-container">
+							<div class="btn noselect" id="btn-confirm"></div>
+							<div class="btn noselect" id="btn-cancel">Cancel</div>
 						</div>
 					</div>
 				</div>

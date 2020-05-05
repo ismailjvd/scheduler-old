@@ -51,6 +51,16 @@ header h3 {
 	color:#005eff;
 }
 
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
+}
+
 #logo {
 	margin: 25px;
 	margin-bottom: 20px;
@@ -71,7 +81,7 @@ header h3 {
 
 .all-filters {
 	display: flex;
-	flex-direction: row;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 }
@@ -206,7 +216,7 @@ select:focus {
 	font-family: 'Sen', sans-serif;
 	margin: 0px;
 	width: 100%;
-    background-color: #858c99;
+    background-color: #6898f3;
     color: white;
     padding: 6px 18px;
     border-top-left-radius: 12px;
@@ -286,6 +296,79 @@ select:focus {
 	right: 2px;
 	width: auto;
 	z-index: 3;
+}
+
+#confirm-overlay {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	z-index: 3;
+	background-color: white;
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+	text-align: center;
+	margin: auto;
+	background-color: rgba(0, 0, 0, 0.6);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	transition: opacity 0.2s ease;
+}
+
+.hidden {
+	visibility: hidden;
+	opacity: 0;
+}
+
+.confirm-dialog {
+	width: 40%;
+	background-color: white;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: 12px;
+	font-family: Calibri;
+	border-radius: 4px;
+	border: 1px solid gray;
+}
+
+.confirm-message {
+	margin: 8px;
+}
+
+.btn-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+
+.btn {
+	width: 100px;
+	border-radius: 8px;
+	border: 1px solid lightgray;
+	margin: 8px;
+	padding: 4px;
+	box-shadow: 1px 1px 0px 0px lightgray;
+}
+
+#btn-confirm {
+	background-color: #ff4343;
+	color: white;
+	font-weight: 540;
+	border: none;
+}
+
+.btn:hover {
+	cursor: pointer;
+}
+
+.btn:active {
+	transform: scale(0.97);
 }
 
 .schedule-menu {
@@ -399,6 +482,10 @@ ul a:hover {
 	align-items: flex-end;
 	width: 100%;
 	padding: 8px 4px;
+}
+
+#schedule-list-wrapper {
+	flex-wrap: wrap;
 }
 
 .list-outer-wrapper::-webkit-scrollbar {
@@ -602,6 +689,14 @@ ul a:hover {
 	border: 2px dashed rgba(0, 0, 0, 0.4);
 }
 
+.list[click-active=true]:hover > .list-item {
+	opacity: 0.6;
+}
+
+.list[click-active=false]:hover > .list-item {
+	opacity: 0.6;
+}
+
 .list .list-item {
 	font-family: Calibri, sans-serif;
 	font-size: 17.5px;
@@ -619,17 +714,30 @@ ul a:hover {
 }
 
 .list .list-item:hover {
-	cursor: pointer;
+	cursor: move; /* fallback if grab cursor is unsupported */
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
 	background-color: rgba(0, 0, 0, 0.12);
 }
 
 .list .list-item:active {
-	cursor: pointer;
+	cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
 	transform: scale(0.98);
 }
 
 .list[click-active=false] .list-item:hover {
 	cursor: not-allowed;
+}
+
+.list[click-active=true] .list-item {
+	cursor: pointer;
+}
+
+.list[click-active=true] .list-item:hover {
+	cursor: pointer;
 }
 
 .list-item.lowerDivs {
@@ -741,11 +849,12 @@ ul a:hover {
 
 .schedule-lists {
 	display: flex;
-	flex-direction: column;
-	width: 25%;
+	flex-direction: row;
+	width: 50%;
 	height: auto;
 	align-items: center;
 	justify-content: center;
+	padding: 12px 12px;
 }
 
 .schedule-lists .list {
@@ -770,9 +879,6 @@ ul a:hover {
 }
 
 @media (max-width: 1200px) {
-	.all-filters {
-		flex-direction: column;
-	}
 	#filter-container {
 		flex-direction: column;
 	}
@@ -822,11 +928,6 @@ ul a:hover {
 		overflow-y: scroll;
 		height: 380px;
 	}
-	#schedule-list-wrapper {
-		flex-direction: column;
-		justify-content: flex-start;
-		width: 100%;
-	}
 	#class-list-outer-wrapper.minor-selected {
 		height: 200px;
 		overflow-y: scroll;
@@ -850,8 +951,8 @@ ul a:hover {
 		width: 31vw;
 	}
 	.schedule-lists {
-		flex-direction: row;
 		width: 100%;
+		padding: 0px;
 	}
 	.schedule-lists .list {
 		height: 100px;
@@ -933,6 +1034,17 @@ ul a:hover {
 @media (max-width: 568px) {
 	#resource-header {
 		width: 75%;
+	}
+	.confirm-dialog {
+		width: 80%;
+	}
+	.btn-container {
+		flex-direction: column;
+		width: 88%;
+	}
+	.btn {
+		margin: 6px;
+		width: 100%;
 	}
 }
 

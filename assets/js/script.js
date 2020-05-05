@@ -159,10 +159,20 @@ $(document).ready(function() {
 
     // Toolbar functions
     $("#refresh").click(function() {
-        refreshLists()
+        let msg = "This action will permanently clear the current schedule. Proceed?"
+        if ($("#confirm-overlay").hasClass("hidden")) {
+            showConfirmDialog(msg, "Clear", refreshLists)
+        } else {
+            hideConfirmDialog(refreshLists)
+        }    
     })
     $("#refresh-title").click(function() {
-        refreshLists()
+        let msg = "This action will permanently clear the current schedule. Proceed?"
+        if ($("#confirm-overlay").hasClass("hidden")) {
+            showConfirmDialog(msg, "Clear", refreshLists)
+        } else {
+            hideConfirmDialog(refreshLists)
+        }
     })
     $("#export").click(function() {
         downloadJSON()
@@ -266,6 +276,10 @@ $(document).ready(function() {
         if ( $(e.target).closest('#schedule-open-menu').length === 0 && $("#schedule-menu-wrapper").css("display") !== "none") {
             $("#schedule-menu-wrapper").css("display", "none")
         }
+        if (($(e.target).closest('#confirm-dialog').length === 0 && $(e.target).attr("id") !== "refresh-title" && $(e.target).attr("id") !== "refresh") || 
+             $(e.target).attr("id") === "btn-cancel" || $(e.target).attr("id") === "btn-confirm") {
+            hideConfirmDialog(refreshLists)
+        } 
     })
 
     // Drag and drop mobile functionality
@@ -299,6 +313,18 @@ function populateMinorList(firstMajor) {
         }
     }
     $("#minor-dropdown").html(str)
+}
+
+function showConfirmDialog(msg, confirmText, confirmFunc) {
+    $("#confirm-overlay").removeClass("hidden")
+    $("#confirm-message").html(msg)
+    $("#btn-confirm").html(confirmText).on("click", confirmFunc)
+}
+
+function hideConfirmDialog(confirmFunc) {
+    $("#confirm-overlay").addClass("hidden")
+    $("#confirm-message").html("")
+    $("#btn-confirm").html("").off("click", confirmFunc)
 }
 
 // Functions to get course name and type form courseId
