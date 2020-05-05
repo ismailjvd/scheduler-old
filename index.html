@@ -13,12 +13,11 @@
 	<meta property="og:type" content="website" />
 	<title>Scheduler</title>
 	<link rel="icon" type="image/png" href="assets/img/small_logo_transparent.png" />
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sen:700">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sen:700" />
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 	<link rel="stylesheet" href="assets/styles/main.css" />
 	<script src="assets/js/script.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 	<div class="app" id="app">
@@ -135,7 +134,7 @@
 			<header class="main-title">
 				<h2>Your Schedule</h2>
 			</header>
-			<div id="refresh-title" class="noselect">
+			<div id="refresh-title" class="refresh-title noselect">
 				&#xf021;
 			</div>
 			<div class="open-menu" id="schedule-open-menu">&#xf142;</div>
@@ -152,7 +151,7 @@
 						</div>
 						<div class="toolbar-element" id="export">
 							<img src="assets/img/export.png" id="export-symbol"></img>
-							<div class="toolbar-text">Export Schedule</div>
+							<div class="toolbar-text" id="export-text">Export Schedule</div>
 						</div>
 						<label for="file" class="toolbar-element">
 							<img src="assets/img/import.png" id="import-symbol"></img>

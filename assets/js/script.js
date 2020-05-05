@@ -1,6 +1,8 @@
 import {polyfill} from 'mobile-drag-drop'
 import $ from 'jquery'
+import htmlToImage from 'html-to-image'
 import * as data from '../data/degrees.json'
+import { saveAs } from 'file-saver'
 
 const queryString = require('query-string')
 const copy = require('clipboard-copy')
@@ -19,6 +21,8 @@ const LIST_ID_TO_NAME = {
 }
 const MAX_CLASS_LENGTH = 20
 const DOMAIN_NAME = "https://ismailjvd.github.io/scheduler/"
+const BLUE_BTN = "#6898f3"
+const RED_BTN = "#ff4343"
 
 $(document).ready(function() {
       // Sort the majors
@@ -161,24 +165,34 @@ $(document).ready(function() {
     $("#refresh").click(function() {
         let msg = "This action will permanently clear the current schedule. Proceed?"
         if ($("#confirm-overlay").hasClass("hidden")) {
-            showConfirmDialog(msg, "Clear", refreshLists)
+            showConfirmDialog(msg, "Clear", refreshLists, RED_BTN)
         } else {
-            hideConfirmDialog(refreshLists)
+            hideConfirmDialog()
         }    
     })
     $("#refresh-title").click(function() {
         let msg = "This action will permanently clear the current schedule. Proceed?"
         if ($("#confirm-overlay").hasClass("hidden")) {
-            showConfirmDialog(msg, "Clear", refreshLists)
+            showConfirmDialog(msg, "Clear", refreshLists, RED_BTN)
         } else {
-            hideConfirmDialog(refreshLists)
+            hideConfirmDialog()
         }
     })
     $("#export").click(function() {
-        downloadJSON()
+        let msg = 'This will download your schedule as an .sch file, which can later be imported via "Import Schedule". Proceed?'
+        if ($("#confirm-overlay").hasClass("hidden")) {
+            showConfirmDialog(msg, "Download", downloadJSON, BLUE_BTN)
+        } else {
+            hideConfirmDialog()
+        }    
     })
     $("#image").click(function() {
-        saveImage()
+        let msg = 'This will save the current view of the schedule in your browser as a PNG. Proceed?'
+        if ($("#confirm-overlay").hasClass("hidden")) {
+            showConfirmDialog(msg, "Save as PNG", saveImage, BLUE_BTN)
+        } else {
+            hideConfirmDialog()
+        }   
     })
     $("#copy-url").click(function() {
         let scheduleObj = {}
@@ -276,9 +290,11 @@ $(document).ready(function() {
         if ( $(e.target).closest('#schedule-open-menu').length === 0 && $("#schedule-menu-wrapper").css("display") !== "none") {
             $("#schedule-menu-wrapper").css("display", "none")
         }
-        if (($(e.target).closest('#confirm-dialog').length === 0 && $(e.target).attr("id") !== "refresh-title" && $(e.target).attr("id") !== "refresh") || 
-             $(e.target).attr("id") === "btn-cancel" || $(e.target).attr("id") === "btn-confirm") {
-            hideConfirmDialog(refreshLists)
+        let targetId = $(e.target).attr("id")
+        if (($(e.target).closest('#confirm-dialog').length === 0 && targetId !== "refresh-title" && targetId !== "refresh" && 
+            $(e.target).closest('#export').length === 0 && $(e.target).closest('#image').length === 0) || targetId === "btn-cancel" || 
+            targetId === "btn-confirm") {
+            hideConfirmDialog()
         } 
     })
 
@@ -315,16 +331,16 @@ function populateMinorList(firstMajor) {
     $("#minor-dropdown").html(str)
 }
 
-function showConfirmDialog(msg, confirmText, confirmFunc) {
+function showConfirmDialog(msg, confirmText, confirmFunc, confirmColor) {
     $("#confirm-overlay").removeClass("hidden")
     $("#confirm-message").html(msg)
-    $("#btn-confirm").html(confirmText).on("click", confirmFunc)
+    $("#btn-confirm").html(confirmText).on("click", confirmFunc).css("background-color", confirmColor)
 }
 
-function hideConfirmDialog(confirmFunc) {
+function hideConfirmDialog() {
     $("#confirm-overlay").addClass("hidden")
     $("#confirm-message").html("")
-    $("#btn-confirm").html("").off("click", confirmFunc)
+    $("#btn-confirm").html("").off("click")
 }
 
 // Functions to get course name and type form courseId
@@ -919,23 +935,15 @@ function readFile (evt) {
 
  // Saves the schedule as an image
  function saveImage() {
-    var container = $("#schedule-container")
-    html2canvas(container, {
-        onrendered: function(canvas) {
-            // canvas is the final rendered <canvas> element
-            var tempcanvas=document.createElement('canvas');
-            var context=tempcanvas.getContext('2d');
-            var width = container.width()
-            var height = container.height()
-            tempcanvas.width = width + 16
-            tempcanvas.height = height + 12
-            context.drawImage(canvas,0,0);
-            var link=document.createElement("a");
-            link.href=tempcanvas.toDataURL('image/jpg');   //function blocks CORS
-            link.download = 'screenshot.jpg';
-            link.click();
-        }
-    });
+    function filter(node) {
+        return !($(node).hasClass('addclass-container') || $(node).hasClass('menu-wrapper') || $(node).hasClass('open-menu') || 
+            $(node).hasClass('refresh-title') || $(node).hasClass('confirm-overlay'))
+    }
+    const container = document.getElementById('schedule-container')
+    htmlToImage.toBlob(container, {filter: filter, height: $(container).height() + 16})
+      .then(function (blob) {
+        saveAs(blob, 'my-schedule.png');
+      });
 }
 
 function filterLists(courseType) {

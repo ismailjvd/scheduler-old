@@ -225,6 +225,8 @@ select:focus {
 
 .main-title h2 {
 	font-weight: 600;
+	width: 200px;
+	text-align: center;
 }
 
 .links-container {
@@ -357,7 +359,6 @@ select:focus {
 }
 
 #btn-confirm {
-	background-color: #ff4343;
 	color: white;
 	font-weight: 540;
 	border: none;
@@ -697,6 +698,14 @@ ul a:hover {
 	opacity: 0.6;
 }
 
+.list[drop-active=true] .list-item {
+	opacity: 0.6;
+}
+
+.list[drop-active=false] .list-item {
+	opacity: 0.6;
+}
+
 .list .list-item {
 	font-family: Calibri, sans-serif;
 	font-size: 17.5px;
@@ -835,7 +844,7 @@ ul a:hover {
 #schedule-container {
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
+	justify-content: flex-start;
 	align-items: center;
 }
 
