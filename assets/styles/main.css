@@ -917,6 +917,9 @@ ul a:hover {
 		right: 42px;
 		font-size: 18px;
 	}
+	#image {
+		display: none;
+	}
 	.open-menu {
 		top: 6px;
 	}
@@ -1029,6 +1032,9 @@ ul a:hover {
 		width: 50%;
 		font-size: 18px;
 	}
+	.confirm-dialog {
+		width: 80%;
+	}
 }
 
 @media (max-height: 732px) {
@@ -1043,9 +1049,6 @@ ul a:hover {
 @media (max-width: 568px) {
 	#resource-header {
 		width: 75%;
-	}
-	.confirm-dialog {
-		width: 80%;
 	}
 	.btn-container {
 		flex-direction: column;
